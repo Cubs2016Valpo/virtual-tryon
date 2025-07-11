@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Customize Your Avatar</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: sans-serif;
+      background: #f2f2f2;
+      display: flex;
+      flex-direction: row;
+      height: 100vh;
+    }
+    #form {
+      padding: 2rem;
+      width: 300px;
+      background: white;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    #form label {
+      display: block;
+      margin: 10px 0 5px;
+    }
+    #form input, #form select {
+      width: 100%;
+      padding: 8px;
+      margin-bottom: 15px;
+    }
+    #avatarContainer {
+      flex: 1;
+      background: #ccc;
+    }
+    canvas {
+      display: block;
+    }
+  </style>
+</head>
+<body>
+  <div id="form">
+    <h2>Customize Avatar</h2>
+    <label for="gender">Gender</label>
+    <select id="gender">
+      <option value="male">Male</option>
+      <option value="female">Female</option>
+    </select>
+
+    <label for="height">Height (inches)</label>
+    <input type="number" id="height" value="65" min="48" max="84" />
+
+    <label for="weight">Weight (lbs)</label>
+    <input type="number" id="weight" value="140" min="60" max="300" />
+
+    <label for="skinColor">Skin Color</label>
+    <input type="color" id="skinColor" value="#c8a165" />
+
+    <label for="hairColor">Hair Color</label>
+    <input type="color" id="hairColor" value="#222222" />
+
+    <label for="hairStyle">Hair Style</label>
+    <select id="hairStyle">
+      <option value="short">Short</option>
+      <option value="medium">Medium</option>
+      <option value="long">Long</option>
+    </select>
+  </div>
+  <div id="avatarContainer">
+    <canvas id="avatarCanvas"></canvas>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script>
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+    const renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('avatarCanvas') });
+    renderer.setSize(window.innerWidth - 300, window.innerHeight);
+    document.getElementById('avatarContainer').appendChild(renderer.domElement);
+
+    // Avatar base
+    const geometry = new THREE.CapsuleGeometry(1, 2, 4, 8);
+    const material = new THREE.MeshBasicMaterial({ color: 0xc8a165 });
+    const avatar = new THREE.Mesh(geometry, material);
+    scene.add(avatar);
+
+    avatar.rotation.y = 0.4;
+    camera.position.z = 5;
+
+    function animate() {
+      requestAnimationFrame(animate);
+      renderer.render(scene, camera);
+    }
+    animate();
+
+    // Handle skin color change
+    document.getElementById('skinColor').addEventListener('input', (e) => {
+      avatar.material.color.set(e.target.value);
+    });
+  </script>
+</body>
+</html>
